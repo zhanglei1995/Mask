@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import path from 'path'
 import marked from 'marked'
+import remark from 'remark'
+import stringify from 'remark-stringify'
 import { fs, eachRE, eachObj } from './common'
 
 export function isPostPublished(post) {
@@ -20,20 +22,50 @@ export function spaceToHyphen(text) {
 }
 
 export function writeMeta(text, meta) {
-  let metaStrings = []
-  for (let [key, value] of eachObj(meta)) {
-    metaStrings.push(`[//]: # (${ spaceToHyphen(key) }: ${ value })`)
+  function attacher(processor, meta) {
+    return function transformer(root) {
+      for (let i = 0; i < root.children.length; i++) {
+        let node = root.children[i]
+        if (node.type === 'definition'
+        && node.identifier === '//'
+        && node.url === '#') {
+          root.children.splice(i, 1)
+          i--
+        }
+      }
+
+      let definitions = []
+      for (let [key, value] of eachObj(meta)) {
+        if (key === 'title') {
+          continue
+        }
+        definitions.push({
+          type: 'definition'
+        , identifier: '//'
+        , title: `${ spaceToHyphen(key) }: ${ value }`
+        , url: '#'
+        })
+      }
+
+      root.children.splice(1, 0, ...definitions)
+    }
   }
-  return `${ metaStrings.join('\n') }\n${ text }`
+
+  return remark()
+  .use(attacher, meta)
+  .process(text)
 }
 
 export function readMeta(text) {
-  const metaRE = /\[\/\/\]\: \# \(([^\n]+)\)/g
+  let metaList = remark()
+    .parse(text)
+    .children
+    .filter(x => x.type === 'definition' && x.identifier === '//' && x.url === '#')
+    .map(x => x.title.split(': '))
 
   let meta = {}
-  for (let result of eachRE(metaRE, text)) {
-    let [key, value] = result.split(': ')
-    meta[spaceToHyphen(key).toLowerCase()] = value.trim()
+  for (let [key, value] of metaList) {
+    meta[spaceToHyphen(key.trim()).toLowerCase()] = value.trim()
   }
 
   if (!meta.title) {

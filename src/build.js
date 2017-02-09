@@ -31,10 +31,12 @@ export async function buildAboutTheme() {
   ]
 }
 
+export async function build() {
+  await fs.removeAsync('public')
+  await fs.mkdirsAsync('public')
+  await buildAll()
+}
+
 if (require.main === module) {
-  (async () => {
-    await fs.removeAsync('public')
-    await fs.mkdirsAsync('public')
-    await buildAll()
-  })()
+  build()
 }
