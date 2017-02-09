@@ -1,0 +1,38 @@
+{
+  "name": "Mask",
+  "version": "0.1.0",
+  "description": "An anti-pattern, untrustworthy publishing platform.",
+  "repository": "ssh://git@git.blackglory.me:10022/BlackGlory/Mask.git",
+  "author": "BlackGlory <woshenmedoubuzhidao@blackglory.me>",
+  "license": "MIT",
+  "scripts": {
+    "make": "babel src -d lib",
+    "build": "node --trace-warnings ./lib/build.js",
+    "watch": "node --trace-warnings ./lib/watch.js",
+    "start": "node --trace-warnings ./lib/start.js",
+    "ghost-to-mask": "babel-node --trace-warnings ./scripts/ghost-to-mask.js"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "cson": "^4.0.0",
+    "fs-extra": "^2.0.0",
+    "koa": "2",
+    "koa-logger": "2",
+    "koa-router": "^7.1.0",
+    "koa-send": "^3.3.0",
+    "lodash": "^4.17.4",
+    "marked": "^0.3.6",
+    "moment": "^2.17.1",
+    "nodegit": "^0.16.0",
+    "rss": "^1.2.2",
+    "sanitize-html": "^1.14.1",
+    "tlml": "^0.1.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-plugin-transform-object-rest-spread": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-preset-latest": "^6.22.0",
+    "babel-runtime": "^6.22.0"
+  }
+}
