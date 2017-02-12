@@ -30,4 +30,8 @@ node_modules
 
 lib
 data
+data.git
 public
+
+*.zip
+*.7z
