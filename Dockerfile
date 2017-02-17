@@ -10,12 +10,12 @@ RUN apt-get update; \
     ; \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/src/app
+RUN mkdir -p /mask
 
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
-COPY . /usr/src/app
-WORKDIR /usr/src/app
+COPY . /mask
+WORKDIR /mask
 RUN yarn install && yarn cache clean && yarn run make
 
 CMD [ "yarn", "start" ]
