@@ -10,6 +10,7 @@
     "init": "node --trace-warnings ./lib/init.js",
     "build": "node --trace-warnings ./lib/build.js",
     "start": "node --trace-warnings ./lib/start.js",
+    "serve": "node --trace-warnings ./lib/serve.js",
     "ghost-to-mask": "babel-node --trace-warnings ./scripts/ghost-to-mask.js"
   },
   "dependencies": {
