@@ -5,7 +5,7 @@ import logger from 'koa-logger'
 import requireDirectory from './utils/require-directory'
 import { eachObj, fs } from './utils/common'
 
-export function serve() {
+export default function serve() {
   const config = requireDirectory('./data/config/')
   const router = require('koa-router')()
   const app = new Koa()

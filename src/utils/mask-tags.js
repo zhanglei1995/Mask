@@ -6,8 +6,6 @@ import requireDirectory from './require-directory'
 import { eachObj } from './common'
 import { createTag, composeTag } from 'tlml'
 
-const config = requireDirectory('data/config')
-
 export const asset = createTag({
   onResult: x => url.resolve('/assets/', x)
 })
@@ -35,7 +33,10 @@ export const prefix = prefix => createTag({
 })
 
 export const absoluteUrl = createTag({
-  onResult: x => url.resolve(config.blog.site, x)
+  onResult: x => {
+    const config = requireDirectory('data/config')
+    return url.resolve(config.blog.site, x)
+  }
 })
 
 export const removeHtmlTags = createTag({

@@ -3,7 +3,7 @@ import path from 'path'
 import { fs } from './utils/common'
 import { helperTags } from 'tlml'
 
-async function addAndCommitAll(repo, message) {
+export async function addAndCommitAll(repo, message) {
   const signDefault = Git.Signature.default(repo)
 
   let files = []
@@ -20,7 +20,13 @@ async function addAndCommitAll(repo, message) {
   }
 }
 
-async function init() {
+export default async function init() {
+  try {
+    await fs.accessAsync('data')
+  } catch(e) {
+    await fs.copyAsync('default', 'data')
+  }
+
   const BARE_TRUE = 1
   const BARE_FALSE = 0
 

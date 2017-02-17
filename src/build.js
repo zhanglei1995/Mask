@@ -31,7 +31,7 @@ export async function buildAboutTheme() {
   ]
 }
 
-export async function build() {
+export default async function build() {
   await fs.removeAsync('public')
   await fs.mkdirsAsync('public')
   await buildAll()
