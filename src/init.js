@@ -3,6 +3,23 @@ import path from 'path'
 import { fs } from './utils/common'
 import { helperTags } from 'tlml'
 
+export async function initCommit(repo, message) {
+  const signDefault = Git.Signature.default(repo)
+
+  let files = []
+  for (let x of await repo.getStatus()) {
+    let path = x.path()
+    if (path[path.length - 1] === '/') {
+      path = path.substring(0, path.length - 1)
+    }
+    files.push(path)
+  }
+
+  if (files.length > 0) {
+    await repo.createCommitOnHead(files, signDefault, signDefault, message)
+  }
+}
+
 export async function addAndCommitAll(repo, message) {
   const author = Git.Signature.default(repo)
 
@@ -24,7 +41,7 @@ export async function addAndCommitAll(repo, message) {
   let head = await Git.Reference.nameToId(repo, 'HEAD')
     , parent = await repo.getCommit(head)
     , tree = await index.writeTree()
-  
+
   await repo.createCommit('HEAD', author, author, message, tree, [parent])
 }
 
@@ -48,11 +65,13 @@ export default async function init() {
   let repoData
   try {
     repoData = await Git.Repository.open('data')
+    await addAndCommitAll(repoData, 'sync')
   } catch(e) {
     // data is not a repo
     repoData = await Git.Repository.init('data', BARE_FALSE)
+    await initCommit(repoData, 'init')
   }
-  await addAndCommitAll(repoData, 'sync')
+
 
   let repoBare
   try {
