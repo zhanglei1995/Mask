@@ -1,0 +1,8 @@
+"/": "/home/page/1.html"
+"/404": "/other/404.html"
+"/rss": "/feed/rss.xml"
+"/page/:page": "/home/page/:page.html"
+"/tag/:tag": "/tag/:tag/page/1.html"
+"/tag/:tag/page/:page": "/tag/:tag/page/:page.html"
+"/:slug/": "/:slug.html"
+"/assets/*": "/assets/*"

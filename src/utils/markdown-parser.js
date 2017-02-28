@@ -85,7 +85,9 @@ export function readMeta(text) {
   }
 
   if (meta.tags) {
-    meta.tags = meta.tags.split(', ')
+    meta.tags = meta.tags.split(',').map(x => x.trim())
+  } else {
+    meta.tags = []
   }
 
   return meta
@@ -114,7 +116,6 @@ export function parseMarkdown(markdownText, extraMeta) {
     text: markdownText
   , html: marked.parser(tokens)
   , meta: readMeta(markdownText)
-
   }, extraMeta)
 }
 

@@ -1,1 +1,12 @@
 title: "Mask blog"
+defaultLang: "zh_CN"
+postsPerPage: 10
+navigation: [
+  {
+    label: "首页"
+    url: "/"
+  }
+]
+activeTheme: "mask-abyss"
+activeTimezone: "Asia/Shanghai"
+site: "/"

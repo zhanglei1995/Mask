@@ -25,6 +25,8 @@ export default function serve() {
       for (let i = 0; filename.includes('*'); i++) {
         filename = filename.replace('*', ctx.params[i])
       }
+
+      console.log(filename)
       try {
         await fs.accessAsync(path.join(__dirname, '../public', filename))
         await send(ctx, filename, {

@@ -28,10 +28,16 @@ export async function buildSinglePost(post) {
 }
 
 function updateMeta(meta) {
+  const config = requireDirectory('data/config')
+
   if (meta.status === 'published') {
     if (!meta.published_at) {
-      meta.published_at = new Date(meta.published_at)
+      meta.published_at = new Date()
     }
+  }
+
+  if (!meta.author) {
+    meta.author = config.blog.default_author
   }
 
   if (!meta.id) {

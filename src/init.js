@@ -4,25 +4,40 @@ import { fs } from './utils/common'
 import { helperTags } from 'tlml'
 
 export async function addAndCommitAll(repo, message) {
-  const signDefault = Git.Signature.default(repo)
+  const author = Git.Signature.default(repo)
 
-  let files = []
+  let index = await repo.refreshIndex()
   for (let x of await repo.getStatus()) {
     let path = x.path()
     if (path[path.length - 1] === '/') {
       path = path.substring(0, path.length - 1)
     }
-    files.push(path)
-  }
 
-  if (files.length > 0) {
-    await repo.createCommitOnHead(files, signDefault, signDefault, message)
+    if (x.isDeleted()) {
+      await index.removeByPath(path)
+    } else {
+      await index.addByPath(path)
+    }
   }
+  await index.write()
+
+  let head = await Git.Reference.nameToId(repo, 'HEAD')
+    , parent = await repo.getCommit(head)
+    , tree = await index.writeTree()
+  
+  await repo.createCommit('HEAD', author, author, message, tree, [parent])
+}
+
+export async function isEmptyDir(pathname) {
+  return (await fs.readdirAsync('data')).length === 0
 }
 
 export default async function init() {
   try {
     await fs.accessAsync('data')
+    if (await isEmptyDir('data')) {
+      throw new Error('Empty dir')
+    }
   } catch(e) {
     await fs.copyAsync('default', 'data')
   }
@@ -56,7 +71,7 @@ export default async function init() {
 
   await remote.push(['refs/heads/master:refs/heads/master'])
 
-  // add post-receive hook
+  // create post-receive hook
   await fs.outputFileAsync('data.git/hooks/post-receive', await helperTags.trim `
     #!/bin/sh
     node ../lib/hooks/post-receive.js
