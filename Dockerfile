@@ -18,4 +18,6 @@ COPY . /mask
 WORKDIR /mask
 RUN yarn install && yarn cache clean && yarn run make
 
+EXPOSE 3000
+
 CMD [ "yarn", "start" ]
