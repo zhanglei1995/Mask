@@ -3,9 +3,9 @@ import path from 'path'
 import { fs } from './utils/common'
 import { helperTags } from 'tlml'
 
-export async function initCommit(repo, message) {
-  const signDefault = Git.Signature.default(repo)
+const committer = Git.Signature.create("Mask", "mask@blackglory.me", Date.now(), 0)
 
+export async function initCommit(repo, message) {
   let files = []
   for (let x of await repo.getStatus()) {
     let path = x.path()
@@ -16,13 +16,11 @@ export async function initCommit(repo, message) {
   }
 
   if (files.length > 0) {
-    await repo.createCommitOnHead(files, signDefault, signDefault, message)
+    await repo.createCommitOnHead(files, committer, committer, message)
   }
 }
 
 export async function addAndCommitAll(repo, message) {
-  const author = Git.Signature.default(repo)
-
   let index = await repo.refreshIndex()
   for (let x of await repo.getStatus()) {
     let path = x.path()
@@ -42,7 +40,7 @@ export async function addAndCommitAll(repo, message) {
     , parent = await repo.getCommit(head)
     , tree = await index.writeTree()
 
-  await repo.createCommit('HEAD', author, author, message, tree, [parent])
+  await repo.createCommit('HEAD', committer, committer, message, tree, [parent])
 }
 
 export async function isEmptyDir(pathname) {
