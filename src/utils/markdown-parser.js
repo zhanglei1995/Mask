@@ -72,10 +72,6 @@ export function readMeta(text) {
     meta.title = parseTitle(text)
   }
 
-  if (meta.id) {
-    meta.id = Number(meta.id)
-  }
-
   if (meta.published_at) {
     meta.published_at = new Date(meta.published_at)
   }
